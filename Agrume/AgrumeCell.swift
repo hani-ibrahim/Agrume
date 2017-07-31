@@ -28,6 +28,11 @@ final class AgrumeCell: UICollectionViewCell {
     scrollView.showsVerticalScrollIndicator = false
     return scrollView
   }()
+  lazy var imageContainerView: UIView = {
+    let view = UIView(frame: self.contentView.bounds)
+    view.backgroundColor = .clear
+    return view
+  }()
   fileprivate lazy var imageView: UIImageView = {
     let imageView = UIImageView(frame: self.contentView.bounds)
     imageView.contentMode = .scaleAspectFit
@@ -51,7 +56,8 @@ final class AgrumeCell: UICollectionViewCell {
 
     backgroundColor = UIColor.clear
     contentView.addSubview(scrollView)
-    scrollView.addSubview(imageView)
+    scrollView.addSubview(imageContainerView)
+    imageContainerView.addSubview(imageView)
     setupGestureRecognizers()
     animator = UIDynamicAnimator(referenceView: scrollView)
   }
@@ -220,7 +226,7 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
     let vectorDistance = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2))
 
     if gesture.state == .began {
-      isDraggingImage = imageView.frame.contains(locationInView)
+      isDraggingImage = imageContainerView.frame.contains(locationInView)
       if isDraggingImage {
         startImageDragging(locationInView, translationOffset: .zero)
       }
@@ -231,7 +237,7 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
         newAnchor?.y += translation.y + imageDragOffsetFromActualTranslation.vertical
         attachmentBehavior?.anchorPoint = newAnchor!
       } else {
-        isDraggingImage = imageView.frame.contains(locationInView)
+        isDraggingImage = imageContainerView.frame.contains(locationInView)
         if isDraggingImage {
           let translationOffset = UIOffset(horizontal: -1 * translation.x, vertical: -1 * translation.y)
           startImageDragging(locationInView, translationOffset: translationOffset)
@@ -253,9 +259,9 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
   fileprivate func dismissWithFlick(_ velocity: CGPoint) {
     flickedToDismiss = true
 
-    let push = UIPushBehavior(items: [imageView], mode: .instantaneous)
+    let push = UIPushBehavior(items: [imageContainerView], mode: .instantaneous)
     push.pushDirection = CGVector(dx: velocity.x * 0.1, dy: velocity.y * 0.1)
-    push.setTargetOffsetFromCenter(imageDragOffsetFromImageCenter, for: imageView)
+    push.setTargetOffsetFromCenter(imageDragOffsetFromImageCenter, for: imageContainerView)
     push.action = pushAction
     animator.removeBehavior(attachmentBehavior!)
     animator.addBehavior(push)
@@ -265,7 +271,7 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
     if isImageViewOffscreen() {
       animator.removeAllBehaviors()
       attachmentBehavior = nil
-      imageView.removeFromSuperview()
+      imageContainerView.removeFromSuperview()
       dismiss()
     }
   }
@@ -281,8 +287,8 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
     isDraggingImage = false
 
     if !animated {
-      imageView.transform = .identity
-      imageView.center = CGPoint(x: scrollView.contentSize.width / 2, y: scrollView.contentSize.height / 2)
+      imageContainerView.transform = .identity
+      imageContainerView.center = CGPoint(x: scrollView.contentSize.width / 2, y: scrollView.contentSize.height / 2)
     } else {
       UIView.animate(withDuration: 0.7,
                      delay: 0,
@@ -292,9 +298,9 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
                      animations: { [unowned self] in
                       guard !self.isDraggingImage else { return }
                       
-                      self.imageView.transform = CGAffineTransform.identity
+                      self.imageContainerView.transform = CGAffineTransform.identity
                       if !self.scrollView.isDragging && !self.scrollView.isDecelerating {
-                        self.imageView.center = CGPoint(x: self.scrollView.contentSize.width / 2,
+                        self.imageContainerView.center = CGPoint(x: self.scrollView.contentSize.width / 2,
                                                         y: self.scrollView.contentSize.height / 2)
                         self.updateScrollViewAndImageViewForCurrentMetrics()
                       }
@@ -306,6 +312,7 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
     scrollView.frame = contentView.bounds
     if let image = imageView.image {
       imageView.frame = resizedFrameForSize(image.size)
+      imageContainerView.frame = imageView.frame
     }
     scrollView.contentSize = imageView.frame.size
     scrollView.contentInset = contentInsetForScrollView(atScale: scrollView.zoomScale)
@@ -344,15 +351,15 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
     imageDragOffsetFromActualTranslation = translationOffset
 
     let anchor = imageDragStartingPoint
-    let imageCenter = imageView.center
+    let imageCenter = imageContainerView.center
     let offset = UIOffset(horizontal: locationInView.x - imageCenter.x, vertical: locationInView.y - imageCenter.y)
     imageDragOffsetFromImageCenter = offset
-    attachmentBehavior = UIAttachmentBehavior(item: imageView, offsetFromCenter: offset, attachedToAnchor: anchor!)
+    attachmentBehavior = UIAttachmentBehavior(item: imageContainerView, offsetFromCenter: offset, attachedToAnchor: anchor!)
     animator.addBehavior(attachmentBehavior!)
 
-    let modifier = UIDynamicItemBehavior(items: [imageView])
-    modifier.angularResistance = angularResistance(in: imageView)
-    modifier.density = density(in: imageView)
+    let modifier = UIDynamicItemBehavior(items: [imageContainerView])
+    modifier.angularResistance = angularResistance(in: imageContainerView)
+    modifier.density = density(in: imageContainerView)
     animator.addBehavior(modifier)
   }
 
@@ -384,7 +391,7 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
 extension AgrumeCell: UIScrollViewDelegate {
 
   func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-    return imageView
+    return imageContainerView
   }
 
   func scrollViewDidZoom(_ scrollView: UIScrollView) {
