@@ -9,13 +9,29 @@
 import Foundation
 
 open class AgrumeImageView: UIView {
-  public var innerImageView: UIImageView
+  
+  private lazy var imageView: UIImageView = {
+    let imageView = UIImageView(frame: self.bounds)
+    imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    imageView.contentMode = .scaleAspectFit
+    imageView.isUserInteractionEnabled = true
+    imageView.clipsToBounds = true
+    imageView.layer.allowsEdgeAntialiasing = true
+    return imageView
+  }()
+  
+  public var image: UIImage? {
+    get {
+      return imageView.image
+    }
+    set {
+      imageView.image = newValue
+    }
+  }
   
   required public override init(frame: CGRect) {
-    innerImageView = UIImageView(frame: CGRect(origin: .zero, size: frame.size))
     super.init(frame: frame)
-    innerImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-    addSubview(innerImageView)
+    addSubview(imageView)
   }
   
   required public init?(coder aDecoder: NSCoder) {

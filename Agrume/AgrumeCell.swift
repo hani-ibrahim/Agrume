@@ -29,19 +29,14 @@ final class AgrumeCell: UICollectionViewCell {
     return scrollView
   }()
   fileprivate lazy var imageView: AgrumeImageView = {
-    let imageView = self.agrumeImageViewType.init(frame: self.contentView.bounds)
-    imageView.innerImageView.contentMode = .scaleAspectFit
-    imageView.innerImageView.isUserInteractionEnabled = true
-    imageView.innerImageView.clipsToBounds = true
-    imageView.innerImageView.layer.allowsEdgeAntialiasing = true
-    return imageView
+    return self.agrumeImageViewType.init(frame: self.contentView.bounds)
   }()
   fileprivate var animator: UIDynamicAnimator!
 
   var agrumeImageViewType: AgrumeImageView.Type = AgrumeImageView.self
   var image: UIImage? {
     didSet {
-      imageView.innerImageView.image = image
+      imageView.image = image
       updateScrollViewAndImageViewForCurrentMetrics()
     }
   }
@@ -56,7 +51,7 @@ final class AgrumeCell: UICollectionViewCell {
   }
   
   override func prepareForReuse() {
-    imageView.innerImageView.image = nil
+    imageView.image = nil
     scrollView.zoomScale = 1
     updateScrollViewAndImageViewForCurrentMetrics()
   }
@@ -299,7 +294,7 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
 
   func updateScrollViewAndImageViewForCurrentMetrics() {
     scrollView.frame = contentView.bounds
-    if let image = imageView.innerImageView.image {
+    if let image = imageView.image {
       imageView.frame = resizedFrameForSize(image.size)
     }
     scrollView.contentSize = imageView.frame.size
