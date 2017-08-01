@@ -33,7 +33,7 @@ public final class Agrume: UIViewController {
 
   public typealias DownloadCompletion = (_ image: UIImage?) -> Void
   
-  public var prepareCellContainer: ((_ cellContainer: UIView) -> Void)?
+  public var didSetImageInCell: ((_ cell: AgrumeCell) -> Void)?
   /// Optional closure to call whenever Agrume is dismissed.
   public var didDismiss: (() -> Void)?
   /// Optional closure to call whenever Agrume scrolls to the next image in a collection. Passes the "page" index
@@ -425,9 +425,9 @@ extension Agrume: UICollectionViewDataSource {
                              cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Agrume.reuseIdentifier,
                                                   for: indexPath) as! AgrumeCell
+    cell.didSetImageInCell = didSetImageInCell
     if let images = images {
       cell.image = images[indexPath.row]
-      prepareCellContainer?(cell.imageContainerView)
 		} else if let dataSource = dataSource {
 			spinner.alpha = 1
 			let index = indexPath.row
@@ -436,7 +436,6 @@ extension Agrume: UICollectionViewDataSource {
         DispatchQueue.main.async {
           if collectionView.indexPathsForVisibleItems.contains(indexPath) {
             cell.image = image
-            self?.prepareCellContainer?(cell.imageContainerView)
             self?.spinner.alpha = 0
           }
         }

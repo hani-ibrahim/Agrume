@@ -12,13 +12,13 @@ protocol AgrumeCellDelegate: class {
   
 }
 
-final class AgrumeCell: UICollectionViewCell {
+public final class AgrumeCell: UICollectionViewCell {
 
   fileprivate static let targetZoomForDoubleTap: CGFloat = 3
   fileprivate static let minFlickDismissalVelocity: CGFloat = 800
   fileprivate static let highScrollVelocity: CGFloat = 1600
 
-  fileprivate lazy var scrollView: UIScrollView = {
+  public lazy var scrollView: UIScrollView = {
     let scrollView = UIScrollView(frame: self.contentView.bounds)
     scrollView.delegate = self
     scrollView.zoomScale = 1
@@ -28,12 +28,12 @@ final class AgrumeCell: UICollectionViewCell {
     scrollView.showsVerticalScrollIndicator = false
     return scrollView
   }()
-  lazy var imageContainerView: UIView = {
+  public lazy var imageContainerView: UIView = {
     let view = UIView(frame: self.contentView.bounds)
     view.backgroundColor = .clear
     return view
   }()
-  fileprivate lazy var imageView: UIImageView = {
+  public lazy var imageView: UIImageView = {
     let imageView = UIImageView(frame: self.contentView.bounds)
     imageView.contentMode = .scaleAspectFit
     imageView.isUserInteractionEnabled = true
@@ -42,10 +42,12 @@ final class AgrumeCell: UICollectionViewCell {
     return imageView
   }()
   fileprivate var animator: UIDynamicAnimator!
+  var didSetImageInCell: ((_ cell: AgrumeCell) -> Void)?
 
   var image: UIImage? {
     didSet {
       imageView.image = image
+      didSetImageInCell?(self)
       updateScrollViewAndImageViewForCurrentMetrics()
     }
   }
@@ -62,11 +64,11 @@ final class AgrumeCell: UICollectionViewCell {
     animator = UIDynamicAnimator(referenceView: scrollView)
   }
 
-  required init?(coder aDecoder: NSCoder) {
+  required public init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
   }
 
-  override func prepareForReuse() {
+  override public func prepareForReuse() {
     imageView.image = nil
     scrollView.zoomScale = 1
     updateScrollViewAndImageViewForCurrentMetrics()
@@ -118,7 +120,7 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
     return scrollView.zoomScale == 1
   }
 
-  override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+  override public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
     if let pan = gestureRecognizer as? UIPanGestureRecognizer, notZoomed() {
       let velocity = pan.velocity(in: scrollView)
       if let delegate = delegate, delegate.isSingleImageMode() {
@@ -133,7 +135,7 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
     return true
   }
 
-  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+  public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
     if let _ = gestureRecognizer as? UIPanGestureRecognizer {
       return notZoomed()
     }
@@ -390,11 +392,11 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
 
 extension AgrumeCell: UIScrollViewDelegate {
 
-  func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+  public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
     return imageContainerView
   }
 
-  func scrollViewDidZoom(_ scrollView: UIScrollView) {
+  public func scrollViewDidZoom(_ scrollView: UIScrollView) {
     scrollView.contentInset = contentInsetForScrollView(atScale: scrollView.zoomScale)
 
     if !scrollView.isScrollEnabled {
@@ -402,12 +404,12 @@ extension AgrumeCell: UIScrollViewDelegate {
     }
   }
 
-  func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+  public func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
     scrollView.isScrollEnabled = scale > 1
     scrollView.contentInset = contentInsetForScrollView(atScale: scale)
   }
 
-  func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+  public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     let highVelocity = AgrumeCell.highScrollVelocity
     let velocity = scrollView.panGestureRecognizer.velocity(in: scrollView.panGestureRecognizer.view)
     if notZoomed() && (fabs(velocity.x) > highVelocity || fabs(velocity.y) > highVelocity) {
