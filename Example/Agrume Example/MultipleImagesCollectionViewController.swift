@@ -40,15 +40,15 @@ final class MultipleImagesCollectionViewController: UICollectionViewController {
     agrume.didScroll = { [unowned self] index in
       self.collectionView?.scrollToItem(at: IndexPath(row: index, section: 0), at: [], animated: false)
     }
-    agrume.didSetImageInCell = { cell in
-      guard cell.imageContainerView.viewWithTag(100) == nil else { return }
-      let overlayView = UIView(frame: cell.imageContainerView.bounds)
-      overlayView.backgroundColor = .red
-      overlayView.tag = 100
-      overlayView.frame.size.height = 200
-      overlayView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-      cell.imageContainerView.addSubview(overlayView)
-    }
+//    agrume.didSetImageInCell = { cell in
+//      guard cell.imageContainerView.viewWithTag(100) == nil else { return }
+//      let overlayView = UIView(frame: cell.imageContainerView.bounds)
+//      overlayView.backgroundColor = .red
+//      overlayView.tag = 100
+//      overlayView.frame.size.height = 200
+//      overlayView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//      cell.imageContainerView.addSubview(overlayView)
+//    }
     agrume.showFrom(self)
   }
   

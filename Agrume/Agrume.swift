@@ -33,7 +33,6 @@ public final class Agrume: UIViewController {
 
   public typealias DownloadCompletion = (_ image: UIImage?) -> Void
   
-  public var didSetImageInCell: ((_ cell: AgrumeCell) -> Void)?
   /// Optional closure to call whenever Agrume is dismissed.
   public var didDismiss: (() -> Void)?
   /// Optional closure to call whenever Agrume scrolls to the next image in a collection. Passes the "page" index
@@ -47,6 +46,7 @@ public final class Agrume: UIViewController {
       setNeedsStatusBarAppearanceUpdate()
     }
   }
+  public var agrumeImageViewType: AgrumeImageView.Type = DefaultAgrumeImageView.self
   /// Hide status bar when presenting. Defaults to `false`
   public var hideStatusBar = false
 
@@ -425,7 +425,7 @@ extension Agrume: UICollectionViewDataSource {
                              cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Agrume.reuseIdentifier,
                                                   for: indexPath) as! AgrumeCell
-    cell.didSetImageInCell = didSetImageInCell
+    cell.agrumeImageViewType = agrumeImageViewType
     if let images = images {
       cell.image = images[indexPath.row]
 		} else if let dataSource = dataSource {

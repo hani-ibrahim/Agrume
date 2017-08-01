@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		94318E541D32612D0096215A /* AgrumeServiceLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94318E531D32612D0096215A /* AgrumeServiceLocator.swift */; };
 		94318E561D3261640096215A /* AgrumeServiceLocatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94318E551D3261640096215A /* AgrumeServiceLocatorTests.swift */; };
+		E90893E71F30C14700B1A6D9 /* AgrumeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90893E61F30C14700B1A6D9 /* AgrumeImageView.swift */; };
 		F2A51FF41B10E00700924912 /* Agrume.h in Headers */ = {isa = PBXBuildFile; fileRef = F2A51FF31B10E00700924912 /* Agrume.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F2A51FFA1B10E00700924912 /* Agrume.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2A51FEE1B10E00700924912 /* Agrume.framework */; };
 		F2A5200B1B10E29B00924912 /* Agrume.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A5200A1B10E29B00924912 /* Agrume.swift */; };
@@ -30,6 +31,7 @@
 /* Begin PBXFileReference section */
 		94318E531D32612D0096215A /* AgrumeServiceLocator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgrumeServiceLocator.swift; sourceTree = "<group>"; };
 		94318E551D3261640096215A /* AgrumeServiceLocatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgrumeServiceLocatorTests.swift; sourceTree = "<group>"; };
+		E90893E61F30C14700B1A6D9 /* AgrumeImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgrumeImageView.swift; sourceTree = "<group>"; };
 		F2A51FEE1B10E00700924912 /* Agrume.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Agrume.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2A51FF21B10E00700924912 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F2A51FF31B10E00700924912 /* Agrume.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Agrume.h; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 				F2DC79D31B17012300818A8C /* UIViewExtensions.swift */,
 				F2DC79D51B170C4B00818A8C /* ImageDownloader.swift */,
 				F2D9598B1B1A108800073772 /* AgrumeCell.swift */,
+				E90893E61F30C14700B1A6D9 /* AgrumeImageView.swift */,
 			);
 			path = Agrume;
 			sourceTree = "<group>";
@@ -231,6 +234,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F2D9598C1B1A108800073772 /* AgrumeCell.swift in Sources */,
+				E90893E71F30C14700B1A6D9 /* AgrumeImageView.swift in Sources */,
 				F2DC79D41B17012300818A8C /* UIViewExtensions.swift in Sources */,
 				F2DC79D61B170C4B00818A8C /* ImageDownloader.swift in Sources */,
 				F2A5200B1B10E29B00924912 /* Agrume.swift in Sources */,
