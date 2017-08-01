@@ -30,39 +30,33 @@ final class AgrumeCell: UICollectionViewCell {
   }()
   fileprivate lazy var imageView: AgrumeImageView = {
     let imageView = self.agrumeImageViewType.init(frame: self.contentView.bounds)
-    imageView.innerImageView?.contentMode = .scaleAspectFit
-    imageView.innerImageView?.isUserInteractionEnabled = true
-    imageView.innerImageView?.clipsToBounds = true
-    imageView.innerImageView?.layer.allowsEdgeAntialiasing = true
+    imageView.innerImageView.contentMode = .scaleAspectFit
+    imageView.innerImageView.isUserInteractionEnabled = true
+    imageView.innerImageView.clipsToBounds = true
+    imageView.innerImageView.layer.allowsEdgeAntialiasing = true
     return imageView
   }()
   fileprivate var animator: UIDynamicAnimator!
 
-  var agrumeImageViewType: AgrumeImageView.Type = DefaultAgrumeImageView.self
+  var agrumeImageViewType: AgrumeImageView.Type = AgrumeImageView.self
   var image: UIImage? {
     didSet {
-      imageView.innerImageView?.image = image
+      imageView.innerImageView.image = image
       updateScrollViewAndImageViewForCurrentMetrics()
     }
   }
   weak var delegate: AgrumeCellDelegate?
 
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-
+  func configureCell() {
     backgroundColor = UIColor.clear
     contentView.addSubview(scrollView)
     scrollView.addSubview(imageView)
     setupGestureRecognizers()
     animator = UIDynamicAnimator(referenceView: scrollView)
   }
-
-  required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-  }
-
+  
   override func prepareForReuse() {
-    imageView.innerImageView?.image = nil
+    imageView.innerImageView.image = nil
     scrollView.zoomScale = 1
     updateScrollViewAndImageViewForCurrentMetrics()
   }
@@ -305,7 +299,7 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
 
   func updateScrollViewAndImageViewForCurrentMetrics() {
     scrollView.frame = contentView.bounds
-    if let image = imageView.innerImageView?.image {
+    if let image = imageView.innerImageView.image {
       imageView.frame = resizedFrameForSize(image.size)
     }
     scrollView.contentSize = imageView.frame.size

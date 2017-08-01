@@ -46,7 +46,7 @@ public final class Agrume: UIViewController {
       setNeedsStatusBarAppearanceUpdate()
     }
   }
-  public var agrumeImageViewType: AgrumeImageView.Type = DefaultAgrumeImageView.self
+  public var agrumeImageViewType: AgrumeImageView.Type = AgrumeImageView.self
   /// Hide status bar when presenting. Defaults to `false`
   public var hideStatusBar = false
 
@@ -426,6 +426,8 @@ extension Agrume: UICollectionViewDataSource {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Agrume.reuseIdentifier,
                                                   for: indexPath) as! AgrumeCell
     cell.agrumeImageViewType = agrumeImageViewType
+    cell.configureCell()
+    
     if let images = images {
       cell.image = images[indexPath.row]
 		} else if let dataSource = dataSource {
