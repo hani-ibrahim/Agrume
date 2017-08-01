@@ -20,7 +20,7 @@ open class AgrumeImageView: UIView {
     return imageView
   }()
   
-  public var image: UIImage? {
+  open var image: UIImage? {
     get {
       return imageView.image
     }
