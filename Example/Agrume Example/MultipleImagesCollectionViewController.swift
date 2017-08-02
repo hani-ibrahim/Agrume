@@ -37,33 +37,10 @@ final class MultipleImagesCollectionViewController: UICollectionViewController {
 
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let agrume = Agrume(images: images, startIndex: indexPath.row, backgroundBlurStyle: .light)
-    agrume.agrumeImageViewType = OverlayImageView.self
     agrume.didScroll = { [unowned self] index in
       self.collectionView?.scrollToItem(at: IndexPath(row: index, section: 0), at: [], animated: false)
     }
     agrume.showFrom(self)
   }
   
-}
-
-class OverlayImageView: AgrumeImageView {
-  
-  required init(frame: CGRect) {
-    super.init(frame: frame)
-    addOverlay()
-  }
-  
-  func addOverlay() {
-    guard viewWithTag(100) == nil else { return }
-    let overlayView = UIView(frame: bounds)
-    overlayView.backgroundColor = .red
-    overlayView.tag = 100
-    overlayView.frame.size.height = 200
-    overlayView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-    addSubview(overlayView)
-  }
-  
-  required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
 }
