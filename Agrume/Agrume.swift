@@ -26,17 +26,22 @@ public final class Agrume: UIViewController {
 
   fileprivate var images: [UIImage]!
   fileprivate var imageUrls: [URL]!
-  private var startIndex: Int?
+  fileprivate var startIndex: Int?
   private let backgroundBlurStyle: UIBlurEffectStyle?
   private let backgroundColor: UIColor?
   fileprivate let dataSource: AgrumeDataSource?
+  fileprivate var visibleIndex: Int?
 
   public typealias DownloadCompletion = (_ image: UIImage?) -> Void
   
   /// Optional closure to call whenever Agrume is dismissed.
   public var didDismiss: (() -> Void)?
+
   /// Optional closure to call whenever Agrume scrolls to the next image in a collection. Passes the "page" index
-  public var didScroll: ((_ index: Int) -> Void)?
+  public var willDisplay: ((_ index: Int) -> Void)?
+  
+  public var didScroll: ((_ from: Int, _ to: Int) -> Void)?
+  
   /// An optional download handler. Passed the URL that is supposed to be loaded. Call the completion with the image
   /// when the download is done.
   public var download: ((_ url: URL, _ completion: @escaping DownloadCompletion) -> Void)?
@@ -453,11 +458,35 @@ extension Agrume: UICollectionViewDataSource {
 
 }
 
+
+extension Agrume {
+  
+  public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    visibleIndex = collectionView.indexPathsForVisibleItems.first?.row
+  }
+  
+  public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    if !decelerate {
+      endScroll(scrollView)
+    }
+  }
+  
+  public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    endScroll(scrollView)
+  }
+  
+  func endScroll(_ scrollView: UIScrollView) {
+    let previousIndex = visibleIndex ?? startIndex ?? 0
+    let newIndex = Int(collectionView.contentOffset.x / collectionView.bounds.width)
+    didScroll?(previousIndex, newIndex)
+  }
+}
+
 extension Agrume: UICollectionViewDelegate {
 
   public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell,
                              forItemAt indexPath: IndexPath) {
-    didScroll?(indexPath.row)
+    willDisplay?(indexPath.row)
     
     if let imageUrls = imageUrls {
       let completion: DownloadCompletion = { [weak self] image in
